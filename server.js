@@ -5,6 +5,7 @@ const MongoStore = require('connect-mongo');
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
 const saltRounds = 10
+const ejs = require('ejs');
 
 require('dotenv').config();
 
@@ -14,6 +15,7 @@ const Schema = mongoose.Schema;
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json());
 app.use(express.static(`public`));
+app.set('view engine', 'ejs');
 
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, { useNewUrlParser: true });
@@ -46,17 +48,7 @@ const passwordSchema = Joi.string().regex(/^[a-zA-Z0-9!@#%^&*_+=[\]\\|;'",.<>/?~
 app.get('/', (req, res) => {
     const fakeRouteNumber = Math.floor(Math.random() * 10) + 1;
     if (!req.session.AUTH) {
-        res.send(`
-        <form style="margin-bottom:2px" action="./signup">
-        <input type="submit" value="Sign Up" />
-        </form>
-        <form style="margin-bottom:2px" action="./login">
-            <input type="submit" value="Log In" />
-        </form>
-        <form style="margin-bottom:2px" action="./fakeRoute${fakeRouteNumber}">
-            <input type="submit" value="Unknown Page" />
-        </form>
-`)
+        res.render('homeRouteUnauthorized.ejs', {});
     } else {
         res.send(`
     <h3 style="margin-bottom:2px"> Hello, ${req.session.USERNAME}!</h3>
