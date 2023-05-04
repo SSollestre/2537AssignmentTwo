@@ -44,26 +44,6 @@ const nameSchema = Joi.string().regex(/^[a-zA-Z]+$/).required();
 const emailSchema = Joi.string().email({ minDomainSegments: 2 }).regex(/^[a-zA-Z0-9!@#%^&*_+=[\]\\|;'",.<>/?~`-]+$/).required();
 const passwordSchema = Joi.string().regex(/^[a-zA-Z0-9!@#%^&*_+=[\]\\|;'",.<>/?~`-]+$/).required();
 
-// Homepage
-app.get('/', (req, res) => {
-    const fakeRouteNumber = Math.floor(Math.random() * 10) + 1;
-    if (!req.session.AUTH) {
-        res.render('homeRouteUnauthorized.ejs', {});
-    } else {
-        res.send(`
-    <h3 style="margin-bottom:2px"> Hello, ${req.session.USERNAME}!</h3>
-        <form style="margin-bottom:2px" action="./members">
-        <input type="submit" value="Members Area" />
-        </form>
-    <form style="margin-bottom:2px" action="./logOut" method="getS">
-        <input type="submit" value="Log Out" />
-    </form>
-    `)
-    }
-
-});
-
-
 // User Model
 const userSchema = new Schema({
     name: { type: String, required: true },
@@ -73,20 +53,21 @@ const userSchema = new Schema({
 
 const User = mongoose.model('User', userSchema);
 
+// Homepage
+app.get('/', (req, res) => {
+    const fakeRouteNumber = Math.floor(Math.random() * 10) + 1;
+    if (!req.session.AUTH) {
+        res.render('homeRouteUnauthorized.ejs', {});
+    } else {
+        res.render('homeRouteAuthorized.ejs', {
+            "user": req.session.USERNAME
+        })
+    }
+});
+
 // Sign Up Page
 app.get('/signup', (req, res) => {
-    res.send(`
-    <h3 style="margin-bottom:2px">Sign Up</h3 >
-        <form style="margin-bottom:2px" action="/signup" method="post">
-        <input type="text" id="name" name="name" placeholder="name"><br>
-        <input type="text" id="email" name="email" placeholder="email"><br>
-        <input style="margin-bottom:2px" type="password" id="password" name="password" placeholder="password"><br>
-                    <input type="submit" id="submit" value="Sign Up">
-                    </form>
-        <form style="margin-bottom:2px" action="./">
-        <input type="submit" value="Home" />
-        </form>
-                    `)
+    res.render('signupRoute.ejs')
 });
 
 
@@ -128,26 +109,16 @@ app.post('/signup', async (req, res) => {
 
 // Invalid form data page
 app.get('/invalidFormData', (req, res) => {
-    res.send(`
-    ${req.session.INVALID_FIELD} is invalid. <br><br>
-    <a href="${req.headers.referer}">Try again</a>.
-    `)
+    res.render('invalidFormDataRoute.ejs', {
+        'invalidField': req.session.INVALID_FIELD,
+        'referer': req.headers.referer
+    })
 })
 
 
 // Log In Page
 app.get('/login', (req, res) => {
-    res.send(`
-    <h3 style="margin-bottom:2px">Log In</h3>
-<form style="margin-bottom:2px" action="/login" method="post">
-    <input type="text" id="email" name="email" placeholder="email"><br>
-    <input style="margin-bottom:2px" type="password" id="password" name="password" placeholder="password"><br>
-    <input type="submit" id="submit" value="Log In">
-</form>
-        <form style="margin-bottom:2px" action="./">
-        <input type="submit" value="Home" />
-        </form>
-`)
+    res.render('loginRoute');
 })
 
 
@@ -206,26 +177,19 @@ const checkAuth = (req, res, next) => {
 
 // On failed authentication
 app.get('/authFail', (req, res) => {
-    res.send(`No match found <br>
-     <a href="${req.headers.referer}">Try again</a>.   
-    `)
+    res.render('authFailRoute', {
+        'referer': req.headers.referer
+    })
 })
 
 
 // Auth route only allowed for authenticated users
 app.get('/members', checkAuth, (req, res) => {
     const imageNumber = Math.floor(Math.random() * 3) + 1;
-    res.send(`
-    <h3 style="margin-bottom:2px"> Hello, ${req.session.USERNAME}!</h3>
-    <img style="margin-bottom:2px" src="/images/a1img${imageNumber}.png">
-        
-    <form style="margin-bottom:2px" margin-bottom:2px action="./">
-        <input type="submit" value="Home" />
-    </form>
-    <form style="margin-bottom:2px" margin-bottom:2px action="./logOut" method="get">
-        <input type="submit" value="Log Out" />
-    </form>
-    `)
+    res.render('membersRoute', {
+        'imageNum': imageNumber,
+        'username': req.session.USERNAME
+    })
 });
 
 
@@ -240,10 +204,7 @@ app.get('/logOut', (req, res) => {
 app.get('/does_not_exist', (req, res) => {
     console.log("Not found")
     res.status(404);
-    res.send(`
-    Error 404 - that page does not exist.<br>
-    <a href="/">Home</a>
-    `);
+    res.render('doesNotExistRoute');
 })
 
 
