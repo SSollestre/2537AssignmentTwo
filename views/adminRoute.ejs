@@ -20,11 +20,13 @@
     <!-- Content -->
     <%- include('partials/header.ejs') %>
         <div class="content">
-            <h3>Admin</h3>
+            <h3> Hello
+                <%= primaryUser.role %>
+            </h3>
             <ul>
                 <% users.forEach( (item)=> { %>
                     <li>
-                        <%= item.name %>
+                        <%= item.name %>: <%= item.role %> <a href="./promote">Promote</a> <a href="./demote">Demote</a>
                     </li>
                     <% }) %>
             </ul>

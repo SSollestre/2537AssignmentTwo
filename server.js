@@ -48,7 +48,8 @@ const passwordSchema = Joi.string().regex(/^[a-zA-Z0-9!@#%^&*_+=[\]\\|;'",.<>/?~
 const userSchema = new Schema({
     name: { type: String, required: true },
     email: { type: String, required: true },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    role: { type: String, required: true }
 });
 
 const User = mongoose.model('User', userSchema);
@@ -96,11 +97,13 @@ app.post('/signup', async (req, res) => {
         const newUser = new User({
             name,
             email,
-            password
+            password,
+            role: 'User'
         })
         newUser.save().then(() => {
             req.session.AUTH = true;
             req.session.USERNAME = req.body.name;
+            req.session.ROLE = 'User'
             res.redirect('/members')
         })
     }
@@ -142,16 +145,17 @@ app.post(('/login'), (req, res) => {
             if (users.length === 0) {
                 console.log("Unauth")
                 req.session.AUTH = false;
-                req.session.failForm = true;
+                req.session.FAIL_FORM = true;
             } else {
                 if (await bcrypt.compare(password, users[0].password)) {
                     console.log("Auth")
                     req.session.AUTH = true;
                     req.session.USERNAME = users[0].name;
+                    req.session.ROLE = users[0].role;
                 } else {
                     console.log("Unauth")
                     req.session.AUTH = false;
-                    req.session.failForm = true;
+                    req.session.FAIL_FORM = true;
                 }
             }
             res.redirect('/members');
@@ -163,11 +167,11 @@ app.post(('/login'), (req, res) => {
 // Checks if the user is authenticated.
 const checkAuth = (req, res, next) => {
     if (!req.session.AUTH) {
-        if (req.session.failForm) {
-            delete req.session.failForm
+        if (req.session.FAIL_FORM) {
+            delete req.session.FAIL_FORM
             return res.redirect('/authFail');
         } else {
-            delete req.session.failForm
+            delete req.session.FAIL_FORM
             return res.redirect('/login');
         }
     }
@@ -203,8 +207,9 @@ app.get('/logOut', (req, res) => {
 // Admin route to change role
 app.get('/admin', checkAuth, async (req, res) => {
     const users = await User.find();
-    console.log(users)
+    const user = await User.findOne({ name: req.session.USERNAME })
     res.render('adminRoute', {
+        'primaryUser': user,
         'users': users
     })
 })
