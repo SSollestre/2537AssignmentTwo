@@ -16,16 +16,22 @@
 
     <!-- Content -->
     <%- include('partials/header.ejs') %>
-        <div class="container-fluid text-center mt-3 vh-100">
-            <form action="./signup">
-                <input type="submit" value="Sign Up" />
-            </form>
-            <form action="./login">
-                <input type="submit" value="Log In" />
-            </form>
-            <form action="./fakeRoute${fakeRouteNumber}">
-                <input type="submit" value="Unknown Page" />
-            </form>
+        <div class="px-4 py-5 my-5 text-center">
+            <h1 class="display-6 fw-bold mb-5">Assignment Two</h1>
+            <div class="col-lg-6 mx-auto">
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                    <form action="./signup">
+                        <input type="submit" value="Sign Up" />
+                    </form>
+                    <form action="./login">
+                        <input type="submit" value="Log In" />
+                    </form>
+                    <form action="./fakeRoute${fakeRouteNumber}">
+                        <input type="submit" value="Unknown Page" />
+                    </form>
+                </div>
+            </div>
+        </div>
 
         </div>
 
