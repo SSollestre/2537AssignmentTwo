@@ -20,19 +20,27 @@
             <h3> Hello
                 <%= primaryUser.role %>
             </h3>
-            <ul>
-                <% users.forEach( (user)=> { %>
-                    <li>
+            <% users.forEach( (user)=> { %>
+                <div class="row my-2 justify-content-center">
+                    <div class="col">
                         <%= user.name %>: <%= user.role %>
-                                <form action="./promote/<%= user.name %>" method="post">
-                                    <input type="submit" value="Promote" />
-                                </form>
-                                <form action="./demote/<%= user.name %>" method="post">
-                                    <input type="submit" value="Demote" />
-                                </form>
-                    </li>
-                    <% }) %>
-            </ul>
+                    </div>
+                    <div class="col">
+                        <form action="./promote/<%= user.name %>" method="post">
+                            <input type="submit" value="Promote" />
+                        </form>
+                    </div>
+                    <div class="col">
+                        <form action="./demote/<%= user.name %>" method="post">
+                            <input type="submit" value="Demote" />
+                        </form>
+                    </div>
+
+
+
+                </div>
+
+                <% }) %>
         </div>
 
         <%- include('partials/footer') %>
