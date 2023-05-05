@@ -16,16 +16,21 @@
 
     <!-- Content -->
     <%- include('partials/header.ejs') %>
-        <div class="container-fluid text-center mt-3 vh-100">
-            <h3>
-                Hello, <%= username %>!
-            </h3>
-            <img src="/images/a1img<%= imageNum %>.png">
-
-            <form margin-bottom:2px action="./">
+        <div class="container-fluid text-center mt-3">
+            <div class="container text-center">
+                <h3> Hello, <%= username %>!</h3>
+                <div class="row">
+                    <% for( let index=1; index <=3; index++ ) { %>
+                        <div class="col">
+                            <img class="img-fluid" src="/images/a1img<%= index %>.png">
+                        </div>
+                        <% } %>
+                </div>
+            </div>
+            <form class="mt-2" action="./">
                 <input type="submit" value="Home" />
             </form>
-            <form margin-bottom:2px action="./logOut" method="get">
+            <form class="mt-2" action="./logOut" method="get">
                 <input type="submit" value="Log Out" />
             </form>
         </div>
