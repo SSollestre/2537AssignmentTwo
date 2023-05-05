@@ -200,6 +200,16 @@ app.get('/logOut', (req, res) => {
 })
 
 
+// Admin route to change role
+app.get('/admin', checkAuth, async (req, res) => {
+    const users = await User.find();
+    console.log(users)
+    res.render('adminRoute', {
+        'users': users
+    })
+})
+
+
 // 404 Page
 app.get('/does_not_exist', (req, res) => {
     console.log("Not found")
