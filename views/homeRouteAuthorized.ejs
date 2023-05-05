@@ -18,17 +18,24 @@
     <%- include('partials/header.ejs') %>
         <div class="container-fluid text-center mt-3">
             <h3> Hello, <%= user %>!</h3>
-            <form action="./members">
-                <input type="submit" value="Members Area" />
-            </form>
-            <form action="./logOut" method="get">
-                <input type="submit" value="Log Out" />
-            </form>
-            <% if (isAdmin) { %>
-                <form action="./admin" method="get">
-                    <input type="submit" value="Admin" />
+            <div class="row my-2">
+                <form action="./members">
+                    <input type="submit" value="Members Area" />
                 </form>
+            </div>
+            <div class="row my-2">
+                <form action="./logOut" method="get">
+                    <input type="submit" value="Log Out" />
+                </form>
+            </div>
+            <% if (isAdmin) { %>
+                <div class="row my-2">
+                    <form action="./admin" method="get">
+                        <input type="submit" value="Admin" />
+                    </form>
+                </div>
                 <% } %>
+
         </div>
 
 
