@@ -268,9 +268,9 @@ app.get('/does_not_exist', (req, res) => {
 
 
 // Page not found
-// app.get('*', (req, res) => {
-//     res.redirect('/does_not_exist')
-// })
+app.get('*', (req, res) => {
+    res.redirect('/does_not_exist')
+})
 
 
 // Start server

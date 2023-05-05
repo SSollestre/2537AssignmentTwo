@@ -18,16 +18,18 @@
     <!-- Content -->
     <%- include('partials/header.ejs') %>
         <div class="container-fluid text-center mt-3 vh-100">
-            <h3> Sign Up</h3>
-            <form action="/signup" method="post">
-                <input type="text" id="name" name="name" placeholder="name"><br>
-                <input type="text" id="email" name="email" placeholder="email"><br>
-                <input type="password" id="password" name="password" placeholder="password"><br>
-                <input type="submit" id="submit" value="Sign Up">
-            </form>
-            <form action="./">
-                <input type="submit" value="Home" />
-            </form>
+            <main class="form-signin w-100 text-center">
+                <form class="w-50, m-auto" action="/signup" method="post">
+                    <h1 class="h3 mb-3 fw-bold">Create an account</h1>
+                    <input type="text" id="name" name="name" placeholder="name"><br>
+                    <input type="text" id="email" name="email" placeholder="email"><br>
+                    <input type="password" id="password" name="password" placeholder="password"><br>
+                    <input class="mt-2" type="submit" id="submit" value="Sign Up">
+                </form>
+                <form class="mt-2" action="./">
+                    <input type="submit" value="Home" />
+                </form>
+            </main>
         </div>
 
 
