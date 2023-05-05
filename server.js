@@ -94,7 +94,6 @@ app.post('/signup', async (req, res) => {
         res.redirect('/invalidFormData')
     } else {
         password = await bcrypt.hash(req.body.password, saltRounds);
-        console.log(password)
         const newUser = new User({
             name,
             email,
@@ -145,18 +144,15 @@ app.post(('/login'), (req, res) => {
             res.redirect('/invalidFormData')
         } else {
             if (users.length === 0) {
-                console.log("Unauth")
                 req.session.AUTH = false;
                 req.session.FAIL_FORM = true;
             } else {
                 if (await bcrypt.compare(password, users[0].password)) {
-                    console.log("Auth")
                     req.session.AUTH = true;
                     req.session.USERNAME = users[0].name;
                     req.session.ROLE = users[0].role;
                     req.session.USER = users[0]
                 } else {
-                    console.log("Unauth")
                     req.session.AUTH = false;
                     req.session.FAIL_FORM = true;
                 }
@@ -220,7 +216,7 @@ const checkAdmin = (req, res, next) => {
 app.get('/admin', checkAuth, checkAdmin, async (req, res) => {
     const users = await User.find();
     const user = await User.findOne({ name: req.session.USERNAME })
-    console.log(req.session.USER)
+
     res.render('adminRoute', {
         'primaryUser': user,
         'users': users
@@ -233,18 +229,48 @@ app.get('/notAnAdmin', (req, res) => {
     res.render('notAnAdminRoute')
 })
 
+
+// Handle the admin to user role change
+app.post('/promote/:id', async (req, res) => {
+    const username = req.params.id;
+    User.updateOne(
+        { name: username },
+        { $set: { role: 'Admin' } }
+    ).then(async (result) => {
+        const updatedUser = await User.findOne({ name: username })
+        if (updatedUser.name === req.session.USER.name) {
+            req.session.USER = updatedUser;
+        }
+        res.redirect('/admin')
+    })
+})
+
+// Handle the user tp admin role change
+app.post('/demote/:id', async (req, res) => {
+    const username = req.params.id;
+    User.updateOne(
+        { name: username },
+        { $set: { role: 'User' } }
+    ).then(async (result) => {
+        const updatedUser = await User.findOne({ name: username })
+        if (updatedUser.name === req.session.USER.name) {
+            req.session.USER = updatedUser;
+        }
+        res.redirect('/admin')
+    })
+})
+
 // 404 Page
 app.get('/does_not_exist', (req, res) => {
-    console.log("Not found")
     res.status(404);
     res.render('doesNotExistRoute');
 })
 
 
 // Page not found
-app.get('*', (req, res) => {
-    res.redirect('/does_not_exist')
-})
+// app.get('*', (req, res) => {
+//     res.redirect('/does_not_exist')
+// })
 
 
 // Start server

@@ -24,9 +24,17 @@
                 <%= primaryUser.role %>
             </h3>
             <ul>
-                <% users.forEach( (item)=> { %>
+                <% users.forEach( (user)=> { %>
                     <li>
-                        <%= item.name %>: <%= item.role %> <a href="./promote">Promote</a> <a href="./demote">Demote</a>
+                        <%= user.name %>: <%= user.role %>
+                                <form class="adminButton" style="margin-bottom:2px" action="./promote/<%= user.name %>"
+                                    method="post">
+                                    <input type="submit" value="Promote" />
+                                </form>
+                                <form class="adminButton" style="margin-bottom:2px" action="./demote/<%= user.name %>"
+                                    method="post">
+                                    <input type="submit" value="Demote" />
+                                </form>
                     </li>
                     <% }) %>
             </ul>
