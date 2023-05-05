@@ -16,16 +16,16 @@
 
     <!-- Content -->
     <%- include('partials/header.ejs') %>
-        <div class="container">
-            <h3 style="margin-bottom:2px"> Hello, <%= user %>!</h3>
-            <form style="margin-bottom:2px" action="./members">
+        <div class="container-fluid text-center mt-3 vh-100">
+            <h3> Hello, <%= user %>!</h3>
+            <form action="./members">
                 <input type="submit" value="Members Area" />
             </form>
-            <form style="margin-bottom:2px" action="./logOut" method="get">
+            <form action="./logOut" method="get">
                 <input type="submit" value="Log Out" />
             </form>
             <% if (isAdmin) { %>
-                <form style="margin-bottom:2px" action="./admin" method="get">
+                <form action="./admin" method="get">
                     <input type="submit" value="Admin" />
                 </form>
                 <% } %>

@@ -16,16 +16,16 @@
 
     <!-- Content -->
     <%- include('partials/header.ejs') %>
-        <div class="container">
-            <h3 style="margin-bottom:2px">
+        <div class="container-fluid text-center mt-3 vh-100">
+            <h3>
                 Hello, <%= username %>!
             </h3>
-            <img style="margin-bottom:2px" src="/images/a1img<%= imageNum %>.png">
+            <img src="/images/a1img<%= imageNum %>.png">
 
-            <form style="margin-bottom:2px" margin-bottom:2px action="./">
+            <form margin-bottom:2px action="./">
                 <input type="submit" value="Home" />
             </form>
-            <form style="margin-bottom:2px" margin-bottom:2px action="./logOut" method="get">
+            <form margin-bottom:2px action="./logOut" method="get">
                 <input type="submit" value="Log Out" />
             </form>
         </div>

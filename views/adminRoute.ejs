@@ -16,7 +16,7 @@
 
     <!-- Content -->
     <%- include('partials/header.ejs') %>
-        <div class="container">
+        <div class="container-fluid text-center mt-3 vh-100">
             <h3> Hello
                 <%= primaryUser.role %>
             </h3>
@@ -24,12 +24,10 @@
                 <% users.forEach( (user)=> { %>
                     <li>
                         <%= user.name %>: <%= user.role %>
-                                <form class="adminButton" style="margin-bottom:2px" action="./promote/<%= user.name %>"
-                                    method="post">
+                                <form action="./promote/<%= user.name %>" method="post">
                                     <input type="submit" value="Promote" />
                                 </form>
-                                <form class="adminButton" style="margin-bottom:2px" action="./demote/<%= user.name %>"
-                                    method="post">
+                                <form action="./demote/<%= user.name %>" method="post">
                                     <input type="submit" value="Demote" />
                                 </form>
                     </li>
