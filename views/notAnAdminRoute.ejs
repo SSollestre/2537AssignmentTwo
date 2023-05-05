@@ -20,18 +20,8 @@
     <!-- Content -->
     <%- include('partials/header.ejs') %>
         <div class="content">
-            <h3 style="margin-bottom:2px"> Hello, <%= user %>!</h3>
-            <form style="margin-bottom:2px" action="./members">
-                <input type="submit" value="Members Area" />
-            </form>
-            <form style="margin-bottom:2px" action="./logOut" method="getS">
-                <input type="submit" value="Log Out" />
-            </form>
-            <% if (isAdmin) { %>
-                <form style="margin-bottom:2px" action="./admin" method="getS">
-                    <input type="submit" value="Admin" />
-                </form>
-                <% } %>
+            <h3>You are not authorized to view this page.</h3>
+            <a href="/">Home</a>
         </div>
 
 

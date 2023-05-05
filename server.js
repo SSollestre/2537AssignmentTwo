@@ -61,7 +61,8 @@ app.get('/', (req, res) => {
         res.render('homeRouteUnauthorized.ejs', {});
     } else {
         res.render('homeRouteAuthorized.ejs', {
-            "user": req.session.USERNAME
+            "user": req.session.USERNAME,
+            'isAdmin': (req.session.USER.role === 'Admin')
         })
     }
 });
@@ -100,7 +101,8 @@ app.post('/signup', async (req, res) => {
             password,
             role: 'User'
         })
-        newUser.save().then(() => {
+        newUser.save().then(async () => {
+            req.session.USER = await User.findOne({ name: req.body.name })
             req.session.AUTH = true;
             req.session.USERNAME = req.body.name;
             req.session.ROLE = 'User'
@@ -152,6 +154,7 @@ app.post(('/login'), (req, res) => {
                     req.session.AUTH = true;
                     req.session.USERNAME = users[0].name;
                     req.session.ROLE = users[0].role;
+                    req.session.USER = users[0]
                 } else {
                     console.log("Unauth")
                     req.session.AUTH = false;
@@ -204,16 +207,31 @@ app.get('/logOut', (req, res) => {
 })
 
 
+// Checks if the user is an admin
+const checkAdmin = (req, res, next) => {
+    if (!(req.session.USER.role === 'Admin')) {
+        return res.redirect('/notAnAdmin');
+    }
+    next();
+}
+
+
 // Admin route to change role
-app.get('/admin', checkAuth, async (req, res) => {
+app.get('/admin', checkAuth, checkAdmin, async (req, res) => {
     const users = await User.find();
     const user = await User.findOne({ name: req.session.USERNAME })
+    console.log(req.session.USER)
     res.render('adminRoute', {
         'primaryUser': user,
         'users': users
     })
 })
 
+
+// Not an admin route
+app.get('/notAnAdmin', (req, res) => {
+    res.render('notAnAdminRoute')
+})
 
 // 404 Page
 app.get('/does_not_exist', (req, res) => {
