@@ -191,8 +191,8 @@ app.get('/members', checkAuth, (req, res) => {
 });
 
 
-// Get logout page
-app.get('/logOut', (req, res) => {
+// Post logout page
+app.post('/logOut', (req, res) => {
     req.session.destroy();
     res.redirect('./');
 })
