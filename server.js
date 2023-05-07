@@ -58,10 +58,13 @@ const User = mongoose.model('User', userSchema);
 app.get('/', (req, res) => {
     const fakeRouteNumber = Math.floor(Math.random() * 10) + 1;
     if (!req.session.AUTH) {
-        res.render('homeRouteUnauthorized.ejs', {});
+        console.log(req.session.USER)
+        res.render('homeRouteUnauthorized.ejs', {
+            primaryUser: req.session.USER
+        });
     } else {
         res.render('homeRouteAuthorized.ejs', {
-            "user": req.session.USERNAME,
+            "primaryUser": req.session.USER,
             'isAdmin': (req.session.USER.role === 'Admin')
         })
     }
@@ -69,7 +72,7 @@ app.get('/', (req, res) => {
 
 // Sign Up Page
 app.get('/signup', (req, res) => {
-    res.render('signupRoute.ejs')
+    res.render('signupRoute.ejs', { primaryUser: req.session.USER })
 });
 
 
@@ -114,6 +117,7 @@ app.post('/signup', async (req, res) => {
 // Invalid form data page
 app.get('/invalidFormData', (req, res) => {
     res.render('invalidFormDataRoute.ejs', {
+        primaryUser: req.session.USER,
         'invalidField': req.session.INVALID_FIELD,
         'referer': req.headers.referer
     })
@@ -122,7 +126,7 @@ app.get('/invalidFormData', (req, res) => {
 
 // Log In Page
 app.get('/login', (req, res) => {
-    res.render('loginRoute');
+    res.render('loginRoute', { primaryUser: req.session.USER });
 })
 
 
@@ -181,15 +185,17 @@ const checkAuth = (req, res, next) => {
 // On failed authentication
 app.get('/authFail', (req, res) => {
     res.render('authFailRoute', {
+        primaryUser: req.session.USER,
         'referer': req.headers.referer
     })
 })
 
 
-// Auth route only allowed for authenticated users
+// Members only route
 app.get('/members', checkAuth, (req, res) => {
     const imageNumber = Math.floor(Math.random() * 3) + 1;
     res.render('membersRoute', {
+        primaryUser: req.session.USER,
         'imageNum': imageNumber,
         'username': req.session.USERNAME
     })
@@ -215,10 +221,9 @@ const checkAdmin = (req, res, next) => {
 // Admin route to change role
 app.get('/admin', checkAuth, checkAdmin, async (req, res) => {
     const users = await User.find();
-    const user = await User.findOne({ name: req.session.USERNAME })
 
     res.render('adminRoute', {
-        'primaryUser': user,
+        primaryUser: req.session.USER,
         'users': users
     })
 })
@@ -226,7 +231,7 @@ app.get('/admin', checkAuth, checkAdmin, async (req, res) => {
 
 // Not an admin route
 app.get('/notAnAdmin', (req, res) => {
-    res.render('notAnAdminRoute')
+    res.render('notAnAdminRoute', { primaryUser: req.session.USER })
 })
 
 
@@ -245,7 +250,7 @@ app.post('/promote/:id', async (req, res) => {
     })
 })
 
-// Handle the user tp admin role change
+// Handle the user to admin role change
 app.post('/demote/:id', async (req, res) => {
     const username = req.params.id;
     User.updateOne(
@@ -263,7 +268,7 @@ app.post('/demote/:id', async (req, res) => {
 // 404 Page
 app.get('/does_not_exist', (req, res) => {
     res.status(404);
-    res.render('doesNotExistRoute');
+    res.render('doesNotExistRoute', { primaryUser: req.session.USER });
 })
 
 
