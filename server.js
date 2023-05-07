@@ -242,6 +242,7 @@ app.get('/admin', checkAuth, checkAdmin, async (req, res) => {
 
 // Get not an page
 app.get('/notAnAdmin', (req, res) => {
+    res.status(403);
     res.render('notAnAdminRoute', { primaryUser: req.session.USER })
 })
 
