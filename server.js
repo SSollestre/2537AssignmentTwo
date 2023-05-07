@@ -107,8 +107,8 @@ app.post('/signup', async (req, res) => {
 app.get('/invalidFormData', (req, res) => {
     res.render('invalidFormDataRoute.ejs', {
         primaryUser: req.session.USER,
-        'invalidField': req.session.INVALID_FIELD,
-        'referer': req.headers.referer
+        invalidField: req.session.INVALID_FIELD,
+        referer: req.headers.referer
     })
 })
 
@@ -175,7 +175,7 @@ const checkAuth = (req, res, next) => {
 app.get('/authFail', (req, res) => {
     res.render('authFailRoute', {
         primaryUser: req.session.USER,
-        'referer': req.headers.referer
+        referer: req.headers.referer
     })
 })
 
@@ -185,8 +185,7 @@ app.get('/members', checkAuth, (req, res) => {
     const imageNumber = Math.floor(Math.random() * 3) + 1;
     res.render('membersRoute', {
         primaryUser: req.session.USER,
-        'imageNum': imageNumber,
-        'username': req.session.USERNAME
+        imageNum: imageNumber,
     })
 });
 
@@ -213,7 +212,7 @@ app.get('/admin', checkAuth, checkAdmin, async (req, res) => {
 
     res.render('adminRoute', {
         primaryUser: req.session.USER,
-        'users': users
+        users: users
     })
 })
 
