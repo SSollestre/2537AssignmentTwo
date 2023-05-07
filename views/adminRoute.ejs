@@ -17,22 +17,26 @@
     <!-- Content -->
     <%- include('partials/header.ejs') %>
         <div class="container-fluid text-center mt-3">
-            <h3> Hello
+            <h3 class="fw-bold"> Hello,
                 <%= primaryUser.role %>
+                    <%= primaryUser.name %>
             </h3>
             <% users.forEach( (user)=> { %>
                 <div class="row my-2 justify-content-center">
-                    <div class="col">
-                        <%= user.name %>: <%= user.role %>
+                    <div class="col-10 col-sm-2">
+                        <span>
+                            <%= user.name %> (<%= user.role %>)
+                        </span>
                     </div>
-                    <div class="col">
+                    <div class="col-6 col-sm-2">
                         <form action="./promote/<%= user.name %>" method="post">
-                            <input type="submit" value="Promote" />
+                            <input class="btn btn-outline-success rounded-pill" type="submit"
+                                value="Promote to Admin" />
                         </form>
                     </div>
-                    <div class="col">
+                    <div class="col-6 col-sm-2">
                         <form action="./demote/<%= user.name %>" method="post">
-                            <input type="submit" value="Demote" />
+                            <input class="btn btn-outline-danger rounded-pill" type="submit" value="Demote to User" />
                         </form>
                     </div>
 
