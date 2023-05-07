@@ -11,11 +11,9 @@
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
 </head>
 
-<body>
-
-
-    <!-- Content -->
-    <%- include('partials/header.ejs')%>
+<!-- Content -->
+<%- include('partials/header.ejs')%>
+    <% if (primaryUser===undefined) { %>
         <div class="px-4 py-5 my-5 text-center">
             <h1 class="display-6 fw-bold mb-5">Assignment Two</h1>
             <div class="col-lg-6 mx-auto">
@@ -26,24 +24,33 @@
                     <form action="./login">
                         <input type="submit" value="Log In" />
                     </form>
-                    <form action="./fakeRoute${fakeRouteNumber}">
-                        <input type="submit" value="Unknown Page" />
-                    </form>
                 </div>
             </div>
         </div>
+        <% } else {%>
+            <div class="container-fluid text-center mt-3">
+                <h3> Hello, <%= primaryUser.name %>!</h3>
+                <div class="row my-2">
+                    <form action="./members">
+                        <input type="submit" value="Members Area" />
+                    </form>
+                </div>
+                <div class="row my-2">
+                    <form action="./logOut" method="get">
+                        <input type="submit" value="Log Out" />
+                    </form>
+                </div>
+                <% if (primaryUser.role==='Admin' ) { %>
+                    <div class="row my-2">
+                        <form action="./admin" method="get">
+                            <input type="submit" value="Admin" />
+                        </form>
+                    </div>
+                    <% } %>
+            </div>
+            <% } %>
 
-        </div>
 
 
-        <%- include('partials/footer') %>
 
-            <!-- Bootstrap Scripts -->
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
-                crossorigin="anonymous"></script>
-</body>
-
-</body>
-
-</html>
+                <%- include('partials/footer') %>

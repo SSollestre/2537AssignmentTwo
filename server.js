@@ -56,18 +56,7 @@ const User = mongoose.model('User', userSchema);
 
 // Homepage
 app.get('/', (req, res) => {
-    const fakeRouteNumber = Math.floor(Math.random() * 10) + 1;
-    if (!req.session.AUTH) {
-        console.log(req.session.USER)
-        res.render('homeRouteUnauthorized.ejs', {
-            primaryUser: req.session.USER
-        });
-    } else {
-        res.render('homeRouteAuthorized.ejs', {
-            "primaryUser": req.session.USER,
-            'isAdmin': (req.session.USER.role === 'Admin')
-        })
-    }
+    res.render('homeRoute', { primaryUser: req.session.USER });
 });
 
 // Sign Up Page
