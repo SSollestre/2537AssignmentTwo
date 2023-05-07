@@ -1,0 +1,17 @@
+<% users.forEach( (user)=> { %>
+    <div class="col d-flex justify-content-center align-items-center mx-auto flex-column flex-md-row">
+
+        <span class="me-2 mb-1">
+            <%= user.name %> (<%= user.role %>)
+        </span>
+
+        <form class="me-2 mb-1" action="./promote/<%= user.name %>" method="post">
+            <input class="btn btn-outline-success rounded-pill" type="submit" value="Promote to Admin" />
+        </form>
+
+        <form action="./demote/<%= user.name %>" method="post">
+            <input class="btn btn-outline-danger rounded-pill" type="submit" value="Demote to User" />
+        </form>
+
+    </div>
+    <% }) %>
