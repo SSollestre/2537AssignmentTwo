@@ -22,8 +22,8 @@
                 <h1 class="display-6 fw-bold mb-5">Assignment Two</h1>
 
                 <div class="row">
-                    <div class="col mx-auto">
-                        <a class="btn btn-outline-dark" href="/login">Login</a>
+                    <div class="col d-flex justify-content-center mx-auto">
+                        <a class="btn btn-outline-dark me-2" href="/login">Login</a>
                         <a class="btn btn-outline-warning" href="/signup">Sign Up</a>
                     </div>
                 </div>
@@ -34,23 +34,14 @@
             <% } else {%>
                 <div class="container-fluid text-center mt-3">
                     <h3> Hello, <%= primaryUser.name %>!</h3>
-                    <div class="row my-2">
-                        <form action="./members">
-                            <input type="submit" value="Members Area" />
-                        </form>
+                    <div class="d-flex justify-content-center">
+
+                        <a class="btn btn-outline-dark me-1" href="/members">Profile</a>
+                        <% if (primaryUser.role==="Admin" ) { %>
+                            <a class="btn btn-outline-dark me-1" href="/admin">Admin</a>
+                            <% } %>
                     </div>
-                    <div class="row my-2">
-                        <form action="./logOut" method="get">
-                            <input type="submit" value="Log Out" />
-                        </form>
-                    </div>
-                    <% if (primaryUser.role==='Admin' ) { %>
-                        <div class="row my-2">
-                            <form action="./admin" method="get">
-                                <input type="submit" value="Admin" />
-                            </form>
-                        </div>
-                        <% } %>
+
                 </div>
                 <% } %>
 
