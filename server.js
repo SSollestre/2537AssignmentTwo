@@ -76,37 +76,60 @@ app.post('/signup', async (req, res) => {
     const emailValidationResult = emailSchema.validate(email);
     const passwordValidationResult = passwordSchema.validate(password);
 
-    if (nameValidationResult.error != null) {
+    if (nameSchema.validate(name).error != null) {
         req.session.INVALID_FIELD = 'Name'
         res.redirect('/invalidFormData')
-    } else if (emailValidationResult.error != null) {
+    } else if (emailSchema.validate(email).error != null) {
         req.session.INVALID_FIELD = 'Email'
         res.redirect('/invalidFormData')
-    } else if (passwordValidationResult.error != null) {
+    } else if (passwordSchema.validate(password).error != null) {
         req.session.INVALID_FIELD = 'Password'
         res.redirect('/invalidFormData')
     } else {
         password = await bcrypt.hash(req.body.password, saltRounds);
+
+        // Check if the fields already exist in the database
+        const matchName = await User.findOne({ name: name })
+        const matchEmail = await User.findOne({ email: email })
+
+        if (matchName != undefined) {
+            req.session.MATCH = 'name';
+            return res.redirect('/alreadyExists')
+        }
+
+        if (matchEmail != undefined) {
+            req.session.MATCH = 'email';
+            return res.redirect('/alreadyExists')
+        }
+
         const newUser = new User({
             name,
             email,
             password,
             role: 'User'
         })
+
         newUser.save().then(async () => {
             req.session.USER = await User.findOne({ name: req.body.name })
             req.session.AUTH = true;
-            req.session.USERNAME = req.body.name;
             req.session.ROLE = 'User'
             res.redirect('/members')
         })
     }
 });
 
+// Get already exists page
+app.get('/alreadyExists', (req, res) => {
+    res.render('alreadyExistsRoute', {
+        primaryUser: req.session.USER,
+        matchingField: req.session.MATCH,
+        referer: req.headers.referer
+    })
+})
 
 // Get invalid form data page
 app.get('/invalidFormData', (req, res) => {
-    res.render('invalidFormDataRoute.ejs', {
+    res.render('invalidFormDataRoute', {
         primaryUser: req.session.USER,
         invalidField: req.session.INVALID_FIELD,
         referer: req.headers.referer
@@ -143,7 +166,6 @@ app.post(('/login'), (req, res) => {
             } else {
                 if (await bcrypt.compare(password, users[0].password)) {
                     req.session.AUTH = true;
-                    req.session.USERNAME = users[0].name;
                     req.session.ROLE = users[0].role;
                     req.session.USER = users[0]
                 } else {
