@@ -54,18 +54,19 @@ const userSchema = new Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// Homepage
+// Get Home page
 app.get('/', (req, res) => {
     res.render('homeRoute', { primaryUser: req.session.USER });
 });
 
-// Sign Up Page
+
+// Get signup page
 app.get('/signup', (req, res) => {
     res.render('signupRoute.ejs', { primaryUser: req.session.USER })
 });
 
 
-// // Write form data to database
+// Post signup page
 app.post('/signup', async (req, res) => {
     const name = req.body.name;
     const email = req.body.email;
@@ -103,7 +104,7 @@ app.post('/signup', async (req, res) => {
 });
 
 
-// Invalid form data page
+// Get invalid form data page
 app.get('/invalidFormData', (req, res) => {
     res.render('invalidFormDataRoute.ejs', {
         primaryUser: req.session.USER,
@@ -113,13 +114,13 @@ app.get('/invalidFormData', (req, res) => {
 })
 
 
-// Log In Page
+// Get login page
 app.get('/login', (req, res) => {
     res.render('loginRoute', { primaryUser: req.session.USER });
 })
 
 
-// Find Matching User login
+// Post login page
 app.post(('/login'), (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
@@ -156,7 +157,7 @@ app.post(('/login'), (req, res) => {
 });
 
 
-// Checks if the user is authenticated.
+// Middleware: Checks if the user is authenticated
 const checkAuth = (req, res, next) => {
     if (!req.session.AUTH) {
         if (req.session.FAIL_FORM) {
@@ -171,7 +172,7 @@ const checkAuth = (req, res, next) => {
 };
 
 
-// On failed authentication
+// Get authentication failure page
 app.get('/authFail', (req, res) => {
     res.render('authFailRoute', {
         primaryUser: req.session.USER,
@@ -180,7 +181,7 @@ app.get('/authFail', (req, res) => {
 })
 
 
-// Members only route
+// Get members page
 app.get('/members', checkAuth, (req, res) => {
     const imageNumber = Math.floor(Math.random() * 3) + 1;
     res.render('membersRoute', {
@@ -190,14 +191,14 @@ app.get('/members', checkAuth, (req, res) => {
 });
 
 
-// Log out destroys session
+// Get logout page
 app.get('/logOut', (req, res) => {
     req.session.destroy();
     res.redirect('./');
 })
 
 
-// Checks if the user is an admin
+// Middleware: Checks if the user is an admin
 const checkAdmin = (req, res, next) => {
     if (!(req.session.USER.role === 'Admin')) {
         return res.redirect('/notAnAdmin');
@@ -206,7 +207,7 @@ const checkAdmin = (req, res, next) => {
 }
 
 
-// Admin route to change role
+// Get admin page
 app.get('/admin', checkAuth, checkAdmin, async (req, res) => {
     const users = await User.find();
 
@@ -217,13 +218,13 @@ app.get('/admin', checkAuth, checkAdmin, async (req, res) => {
 })
 
 
-// Not an admin route
+// Get not an page
 app.get('/notAnAdmin', (req, res) => {
     res.render('notAnAdminRoute', { primaryUser: req.session.USER })
 })
 
 
-// Handle the admin to user role change
+// Post promotion of selected user
 app.post('/promote/:id', async (req, res) => {
     const username = req.params.id;
     User.updateOne(
@@ -238,7 +239,7 @@ app.post('/promote/:id', async (req, res) => {
     })
 })
 
-// Handle the user to admin role change
+// Post demotion of selected user
 app.post('/demote/:id', async (req, res) => {
     const username = req.params.id;
     User.updateOne(
@@ -253,14 +254,14 @@ app.post('/demote/:id', async (req, res) => {
     })
 })
 
-// 404 Page
+// Get 404 Page
 app.get('/does_not_exist', (req, res) => {
     res.status(404);
     res.render('doesNotExistRoute', { primaryUser: req.session.USER });
 })
 
 
-// Page not found
+// Get Page not found page
 app.get('*', (req, res) => {
     res.redirect('/does_not_exist')
 })
